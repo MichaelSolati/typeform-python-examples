@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typeform Message Board</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    /* Chat containers */
+    .chat-container {
+      border: 2px solid #dedede;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    /* Darker chat container */
+    .chat-darker {
+      border-color: #ccc;
+      background-color: #ddd;
+    }
+
+    /* Clear floats */
+    .chat-container::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    /* Style images */
+    .chat-container img {
+      float: left;
+      max-width: 60px;
+      width: 100%;
+      margin-right: 20px;
+      border-radius: 50%;
+    }
+
+    /* Style the right image */
+    .chat-container img.chat-right {
+      float: right;
+      margin-left: 20px;
+      margin-right: 0;
+    }
+
+    /* Style time text */
+    .chat-time-right {
+      float: right;
+      color: #aaa;
+    }
+
+    /* Style time text */
+    .chat-time-left {
+      float: left;
+      color: #999;
+    }
+
+    body {
+      background: #999
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div id="message-board" class="col-12 col-lg-6"></div>
+      <div class="col-12 col-lg-6">
+        <div class="typeform-widget" data-url="{{ formURL }}" style="width: 100%; height: 500px;"></div>
+        <script>
+          (function () {
+            var qs, js, q, s, d = document,
+              gi = d.getElementById,
+              ce = d.createElement,
+              gt = d.getElementsByTagName,
+              id = "typef_orm",
+              b = "https://embed.typeform.com/";
+            if (!gi.call(d, id)) {
+              js = ce.call(d, "script");
+              js.id = id;
+              js.src = b + "embed.js";
+              q = gt.call(d, "script")[0];
+              q.parentNode.insertBefore(js, q)
+            }
+          })()
+        </script>
+      </div>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/5.8.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.8.3/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: '{{ firebaseConfig.apiKey }}',
+      authDomain: '{{ firebaseConfig.authDomain }}',
+      databaseURL: '{{ firebaseConfig.databaseURL }}',
+      projectId: '{{ firebaseConfig.projectId }}',
+      storageBucket: '{{ firebaseConfig.storageBucket }}',
+      messagingSenderId: '{{ firebaseConfig.messagingSenderId }}'
+    }
+    firebase.initializeApp(config);
+
+    firebase.database().ref('webhooks/message-board').limitToLast(10).on('child_added', (data) => {
+      const { content, displayName, thumbnailUrl, timestamp, type } = data.val();
+      const div = document.createElement('div');
+      div.className = `chat-container ${(type !== 'question') ? 'chat-darker' : ''}`;
+      div.innerHTML =
+        `
+      <img src="${thumbnailUrl}" alt="${displayName}" class="${(type !== 'question') ? 'chat-right' : ''}"">
+      <p>${content}</p>
+      <span class="${(type !== 'question') ? 'chat-time-left' : 'chat-time-right'}">${displayName} - ${(new Date(timestamp)).toUTCString()}</span>
+      `;
+      document.getElementById('message-board').appendChild(div);
+    });
+  </script>
+</body>
+
+</html>
