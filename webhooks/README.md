@@ -111,7 +111,7 @@ Connect the project with the correct Google Account as well as Google Cloud proj
 Now we just need to deploy our function:
 
 ```Bash
-gcloud beta functions deploy webhooksMessageBoard --runtime python37 --trigger-http
+gcloud functions deploy webhooksMessageBoard --runtime python37 --trigger-http
 ```
 
 This may take a few minutes, on completeion pay attention to the console. On success you should see something like this:

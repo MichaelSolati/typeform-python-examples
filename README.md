@@ -10,10 +10,15 @@ Visit the [Typeform Developer Portal](https://developer.typeform.com/) for more 
 
 ## Samples
 
-* [Webhooks Sample](webhooks/)
+* [Webhooks Example](webhooks/)
   * Experience a simple message board that uses Typeform for new messages and a Python webhook handler to parse the submission and store it in a Firebase Database.
   * Services used include:
     * [Typeform](https://www.typeform.com/)
     * [Firebase](https://firebase.com/)
+    * [Google Cloud](https://cloud.google.com/)
+* [OAuth2 Example](oauth2/)
+  * An example application that requests permission to have access to a Typeform user's basic information as well as a list of their forms.
+  * Services used include:
+    * [Typeform](https://www.typeform.com/)
     * [Google Cloud](https://cloud.google.com/)
 * MORE TO COME...
